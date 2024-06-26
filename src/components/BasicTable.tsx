@@ -6,7 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(
+/*function createData(
   name: string,
   calories: number,
   fat: number,
@@ -22,9 +22,15 @@ const rows = [
   createData('Eclair', 262, 16.0, 24, 6.0),
   createData('Cupcake', 305, 3.7, 67, 4.3),
   createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+];*/
+
+interface Config{
+  row: Array<Object>
+}
 
 export default function BasicTable() {
+
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
