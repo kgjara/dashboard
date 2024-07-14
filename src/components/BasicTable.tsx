@@ -25,20 +25,36 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];*/
 
-interface Config{
+interface Config {
   rows: Array<Object>
 }
 
-export default function BasicTable() {
-   {/* 
+export default function BasicTable( data:Config) {
+  {/* 
          4. Declare la variable de estado (rows) y la función de actualización (setRows).
          Use el mismo identificador de la variable con valores fijos (rows)
      */}
 
-     let [rows, setRows] = useState([])
+  let [rows, setRows] = useState([])
 
-     
-  
+  {/* 
+         5. Agregue el hook useEffect, controlado por el prop del componente (data), y
+         Dentro del hook, invoque al método de actualización con el valor del prop (data.rows).
+     */}
+
+  useEffect(() => {
+
+    (() => {
+
+      setRows(data.rows)
+
+    })()
+
+  }, [data])
+
+
+  {/* JSX */ }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -46,6 +62,10 @@ export default function BasicTable() {
           <TableRow>
             <TableCell>Rango de horas</TableCell>
             <TableCell align="right">Dirección del viento</TableCell>
+            <TableCell align="right">Temperatura</TableCell>
+            <TableCell align="right">Presión</TableCell>
+            <TableCell align="right">Humedad</TableCell>
+            <TableCell align="right">Porcentaje de Nubes</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,6 +78,10 @@ export default function BasicTable() {
                 {row.rangeHours}
               </TableCell>
               <TableCell align="right">{row.windDirection}</TableCell>
+              <TableCell align="right">{row.temperature}</TableCell>
+              <TableCell align="right">{row.pressure}</TableCell>
+              <TableCell align="right">{row.humidity}</TableCell>
+              <TableCell align="right">{row.clouds}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -77,15 +77,14 @@ export default function ControlPanel() {
                 </FormControl>
 
             </Box>
-             Muestra la descripción de la variable seleccionada
+            {/* Muestra la descripción de la variable seleccionada 
             <Typography mt={2} component="p" color="text.secondary">
                 {
                     (selected >= 0) ? items[selected]["description"] : ""
                 }
-            </Typography>
+            </Typography>*/}
 
-            {/* Muestra la descripción de la variable seleccionada 
-            <Typography ref={descriptionRef} mt={2} component="p" color="text.secondary" />*/}
+            <Typography ref={descriptionRef} mt={2} component="p" color="text.secondary" />
             
 
         </Paper>

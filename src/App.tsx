@@ -28,11 +28,9 @@ function App() {
 
     (async () => {
 
-      let savedTextXML = ''
-
       {/* Del LocalStorage, obtiene el valor de las claves openWeatherMap y expiringTime */ }
 
-      savedTextXML = localStorage.getItem("openWeatherMap")
+      let savedTextXML = localStorage.getItem("openWeatherMap")
       let expiringTime = localStorage.getItem("expiringTime") //cache guardada en el navegador
 
       {/* Estampa de tiempo actual */ }
@@ -80,8 +78,8 @@ function App() {
 
       let location = xml.getElementsByTagName("location")[1]
 
-      let city = xml.getElementsByTagName("name")[0].innerHTML
-      dataToIndicators.push(["city", "Ciudad", city])
+      /*let city = xml.getElementsByTagName("name")[0].innerHTML
+      dataToIndicators.push(["city", "Ciudad", city])*/
 
       let geobaseid = location.getAttribute("geobaseid")
       dataToIndicators.push(["Location", "geobaseid", geobaseid])
@@ -104,25 +102,31 @@ function App() {
 
       setIndicators(indicatorsElements)
 
-      {/* 
-                 2. Procese los resultados de acuerdo con el diseño anterior.
-                 Revise la estructura del documento XML para extraer los datos necesarios. 
-             */}
-
+      // 2. Procese los resultados de acuerdo con el diseño anterior. Revise la estructura del documento XML para extraer los datos necesarios.
       let arrayObjects = Array.from(xml.getElementsByTagName("time")).map((timeElement) => {
+        let rangeHours = timeElement.getAttribute("from").split("T")[1] + " - " + timeElement.getAttribute("to").split("T")[1];
+        let windDirection = timeElement.getElementsByTagName("windDirection")[0].getAttribute("deg") + " " + timeElement.getElementsByTagName("windDirection")[0].getAttribute("code");
 
-        let rangeHours = timeElement.getAttribute("from").split("T")[1] + " - " + timeElement.getAttribute("to").split("T")[1]
+        let temperatureElement = timeElement.getElementsByTagName("temperature")[0];
+        let temperature = temperatureElement.getAttribute("value") + " " + temperatureElement.getAttribute("unit");
 
-        let windDirection = timeElement.getElementsByTagName("windDirection")[0].getAttribute("deg") + " " + timeElement.getElementsByTagName("windDirection")[0].getAttribute("code")
+        let pressureElement = timeElement.getElementsByTagName("pressure")[0];
+        let pressure = pressureElement.getAttribute("value") + " " + pressureElement.getAttribute("unit");
 
-        return { "rangeHours": rangeHours, "windDirection": windDirection }
+        let humidityElement = timeElement.getElementsByTagName("humidity")[0];
+        let humidity = humidityElement.getAttribute("value") + " " + humidityElement.getAttribute("unit");
 
-      })
+        let cloudsElement = timeElement.getElementsByTagName("clouds")[0];
+        let clouds = cloudsElement.getAttribute("all") + " " + cloudsElement.getAttribute("unit");
 
-      arrayObjects = arrayObjects.slice(0, 8)
-      {/* 3. Actualice de la variable de estado mediante la función de actualización */ }
+        return { rangeHours, windDirection, temperature, pressure, humidity, clouds };
 
-      setRowsTable(arrayObjects)
+      });
+
+      arrayObjects = arrayObjects.slice(0, 8);
+
+      // 3. Actualice de la variable de estado mediante la función de actualización
+      setRowsTable(arrayObjects);
 
     })()
 
@@ -130,31 +134,27 @@ function App() {
   }, [])
 
   return (
-    <Grid container spacing={5}>
-      <Grid xs={12} sm={4} md={3} lg={12}>
+    <Grid container spacing={3}>
+      <Grid xs={12} >
         <Summary></Summary>
       </Grid>
-      <Grid xs={6} sm={4} md={3} lg={2}>
-        {indicators[0]}
+      <Grid container spacing={3} xs={12}>
+        {indicators.map((indicator, index) => (
+          <Grid key={index} xs={12} sm={4} md={4}>
+            {indicator}
+          </Grid>
+        ))}
       </Grid>
-      <Grid xs={6} sm={4} md={3} lg={2}>
+      <Grid container spacing={3} xs={12}>
+      <Grid xs={12} sm={6} md={4}>
         <ControlPanel />
-      </Grid>
-      <Grid xs={12} sm={4} md={3} lg={2}></Grid>
-      <Grid xs={6} sm={4} md={6} lg={2}></Grid>
-      <Grid xs={4} sm={12} md={12} lg={12}>
-        <WeatherChart></WeatherChart>
-      </Grid>
-      <Grid lg={6}>
-        {indicators[1]}
-      </Grid>
-      <Grid lg={6}>
-        {indicators[2]}
-      </Grid>
-      <Grid xs={4} sm={12} md={12} lg={12}>
-        <Grid lg={9}>
-          <BasicTable rows={rowsTable}></BasicTable>
         </Grid>
+        <Grid xs={12} sm={6} md={8}>
+        <WeatherChart></WeatherChart>
+        </Grid>
+        </Grid>
+      <Grid xs={12}>
+        <BasicTable rows={rowsTable}></BasicTable>
       </Grid>
     </Grid>
   )

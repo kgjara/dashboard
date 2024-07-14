@@ -4,11 +4,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 
-import sunrise from '../assets/sunrise.jpeg'
+import sunrise from '../assets/newSunrise.jpg'
 
 export default function Summary() {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ width: '100%' }}>
             <CardActionArea>
                 <CardMedia
                     component="img"
