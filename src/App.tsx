@@ -20,6 +20,8 @@ function App() {
   //let[variable,setVariable] = useState(-1);
   let [indicators, setIndicators] = useState([])
 
+  const [selectedVariable, setSelectedVariable] = useState<number | null>(null);
+
 
   {/* Hook: useEffect */ }
 
@@ -147,10 +149,10 @@ function App() {
       </Grid>
       <Grid container spacing={3} xs={12}>
       <Grid xs={12} sm={6} md={4}>
-        <ControlPanel />
+      <ControlPanel selectedVariable={selectedVariable} setSelectedVariable={setSelectedVariable} />
         </Grid>
         <Grid xs={12} sm={6} md={8}>
-        <WeatherChart></WeatherChart>
+        <WeatherChart selectedVariable={selectedVariable} />
         </Grid>
         </Grid>
       <Grid xs={12}>

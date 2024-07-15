@@ -7,8 +7,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
+interface ControlPanelProps {
+    selectedVariable: number | null;
+    setSelectedVariable: (value: number) => void;
+}
 
-export default function ControlPanel() {
+export default function ControlPanel({ selectedVariable, setSelectedVariable }: ControlPanelProps) {
 
     {/* Variable de estado y función de actualización */ }
 
@@ -27,19 +31,19 @@ export default function ControlPanel() {
         { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." }
     ]
 
-    let options = items.map((item, key) => <MenuItem key={key} value={key}>{item["name"]}</MenuItem>)
+    const options = items.map((item, key) => (
+        <MenuItem key={key} value={key}>{item.name}</MenuItem>
+    ));
 
     {/* Manejador de eventos */ }
 
     const handleChange = (event: SelectChangeEvent) => {
 
-        let idx = parseInt(event.target.value)
-        setSelected(idx);
-
-        {/* Modificación de la referencia */ }
+        const idx = event.target.value as number;
+        setSelectedVariable(idx);
 
         if (descriptionRef.current !== null) {
-            descriptionRef.current.innerHTML = (idx >= 0) ? items[idx]["description"] : ""
+            descriptionRef.current.innerHTML = (idx >= 0) ? items[idx].description : "";
         }
     };
 
@@ -66,7 +70,7 @@ export default function ControlPanel() {
                         labelId="simple-select-label"
                         id="simple-select"
                         label="Variables"
-                        defaultValue='-1'
+                        value={selectedVariable !== null ? selectedVariable : ''}
                         onChange={handleChange}
                     >
                         <MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>
