@@ -15,12 +15,10 @@ export default function Summary() {
     const [image, setImage] = useState(sunrise);
 
     useEffect(() => {
-        // Update the time every second
         const timer = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);
 
-        // Cleanup the interval on component unmount
         return () => clearInterval(timer);
     }, []);
 
