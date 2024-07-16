@@ -7,12 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-interface ControlPanelProps {
-    selectedVariable: number | null;
-    setSelectedVariable: (value: number) => void;
-}
 
-export default function ControlPanel({ selectedVariable, setSelectedVariable }: ControlPanelProps) {
+export default function ControlPanel({ setSelectedVariable }) {
 
     {/* Variable de estado y función de actualización */ }
 
@@ -31,19 +27,20 @@ export default function ControlPanel({ selectedVariable, setSelectedVariable }: 
         { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." }
     ]
 
-    const options = items.map((item, key) => (
-        <MenuItem key={key} value={key}>{item.name}</MenuItem>
-    ));
+    let options = items.map((item, key) => <MenuItem key={key} value={key}>{item["name"]}</MenuItem>)
 
     {/* Manejador de eventos */ }
 
     const handleChange = (event: SelectChangeEvent) => {
 
-        const idx = event.target.value as number;
+        let idx = parseInt(event.target.value)
+        setSelected(idx);
         setSelectedVariable(idx);
 
+        {/* Modificación de la referencia */ }
+
         if (descriptionRef.current !== null) {
-            descriptionRef.current.innerHTML = (idx >= 0) ? items[idx].description : "";
+            descriptionRef.current.innerHTML = (idx >= 0) ? items[idx]["description"] : ""
         }
     };
 
@@ -70,7 +67,7 @@ export default function ControlPanel({ selectedVariable, setSelectedVariable }: 
                         labelId="simple-select-label"
                         id="simple-select"
                         label="Variables"
-                        value={selectedVariable !== null ? selectedVariable : ''}
+                        defaultValue='-1'
                         onChange={handleChange}
                     >
                         <MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>

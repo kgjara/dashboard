@@ -1,11 +1,7 @@
 import { Chart } from "react-google-charts";
 import Paper from '@mui/material/Paper';
 
-interface WeatherChartProps {
-    selectedVariable: number | null;
-}
-
-export default function WeatherChart({ selectedVariable }: WeatherChartProps) {
+export default function WeatherChart({ weatherData, selectedVariable }) {
 
     {/* Configuración */}
 
@@ -16,32 +12,23 @@ export default function WeatherChart({ selectedVariable }: WeatherChartProps) {
     }
 
     {/* Datos de las variables meteorológicas */}
-
-    const allData = [
+    const data = [
         ["Hora", "Precipitación", "Humedad", "Nubosidad"],
-        ["03:00", 13, 78, 75],
-        ["06:00", 4, 81, 79],
-        ["09:00", 7, 82, 69],
-        ["12:00", 3, 73, 62],
-        ["15:00", 4, 66, 75],
-        ["18:00", 6, 64, 84],
-        ["21:00", 5, 77, 99]
+        ...weatherData.map(item => [
+            item.rangeHours.split(" - ")[0],
+            parseFloat(item.precipitation) * 100,
+            parseFloat(item.humidity),
+            parseFloat(item.clouds)
+        ])
     ];
+    
+    // Si no hay selección, se muestra todas las variables
+    const chartData = selectedVariable === -1 
+        ? data 
+        : data.map(row => [row[0], row[selectedVariable + 1]]);
+    
+    
 
-    let data = allData;
-
-    if (selectedVariable !== null) {
-        const variableMap = {
-            0: "Precipitación",
-            1: "Humedad",
-            2: "Nubosidad"
-        };
-
-        data = [["Hora", variableMap[selectedVariable]]];
-        for (let i = 1; i < allData.length; i++) {
-            data.push([allData[i][0], allData[i][selectedVariable + 1]]);
-        }
-    }
     {/* JSX */}
 
     return (
@@ -54,7 +41,7 @@ export default function WeatherChart({ selectedVariable }: WeatherChartProps) {
         >
             <Chart
                 chartType="LineChart"
-                data={data}
+                data={chartData}
                 width="100%"
                 height="400px"
                 options={options}

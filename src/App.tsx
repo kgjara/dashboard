@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import './App.css'
@@ -20,7 +19,9 @@ function App() {
   //let[variable,setVariable] = useState(-1);
   let [indicators, setIndicators] = useState([])
 
-  const [selectedVariable, setSelectedVariable] = useState<number | null>(null);
+  let [weatherData, setWeatherData] = useState([]);
+
+  let [selectedVariable, setSelectedVariable] = useState(-1);
 
 
   {/* Hook: useEffect */ }
@@ -121,7 +122,10 @@ function App() {
         let cloudsElement = timeElement.getElementsByTagName("clouds")[0];
         let clouds = cloudsElement.getAttribute("all") + " " + cloudsElement.getAttribute("unit");
 
-        return { rangeHours, windDirection, temperature, pressure, humidity, clouds };
+        let precipitationElement = timeElement.getElementsByTagName("precipitation")[0];
+        let precipitation = precipitationElement.getAttribute("probability") || 0;
+
+        return { rangeHours, windDirection, temperature, pressure, humidity, clouds,precipitation };
 
       });
 
@@ -129,6 +133,8 @@ function App() {
 
       // 3. Actualice de la variable de estado mediante la función de actualización
       setRowsTable(arrayObjects);
+
+      setWeatherData(arrayObjects);
 
     })()
 
@@ -148,13 +154,13 @@ function App() {
         ))}
       </Grid>
       <Grid container spacing={3} xs={12}>
-      <Grid xs={12} sm={6} md={4}>
-      <ControlPanel selectedVariable={selectedVariable} setSelectedVariable={setSelectedVariable} />
+        <Grid xs={12} sm={6} md={4}>
+        <ControlPanel setSelectedVariable={setSelectedVariable} />
         </Grid>
         <Grid xs={12} sm={6} md={8}>
-        <WeatherChart selectedVariable={selectedVariable} />
+        <WeatherChart weatherData={weatherData} selectedVariable={selectedVariable} />
         </Grid>
-        </Grid>
+      </Grid>
       <Grid xs={12}>
         <BasicTable rows={rowsTable}></BasicTable>
       </Grid>
